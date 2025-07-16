@@ -1,23 +1,17 @@
 class MCPController:
-    def __init__(self, hr_input_agent, search_agent, resume_parser_agent, ranking_agent, email_agent):
+    def __init__(self, hr_input_agent=None, search_agent=None, resume_parser_agent=None, ranking_agent=None, email_agent=None):
         self.hr_input_agent = hr_input_agent
         self.search_agent = search_agent
         self.resume_parser_agent = resume_parser_agent
         self.ranking_agent = ranking_agent
         self.email_agent = email_agent
 
-    def run_workflow(self):
-        # Step 1: Collect HR input
-        resumes = self.hr_input_agent.collect_resumes()
+    def run_workflow(self, data):
+        for step in self.steps:
+            data = step(data)
+        return data
 
-        # Step 2: Search and filter resumes
-        filtered_resumes = self.search_agent.filter_resumes(resumes)
+    def incorporate_feedback(self, feedback):
+        # Logic to adjust workflow or data based on feedback
+        pass
 
-        # Step 3: Parse resumes to extract relevant information
-        parsed_resumes = self.resume_parser_agent.parse_resumes(filtered_resumes)
-
-        # Step 4: Rank the parsed resumes based on relevance
-        ranked_resumes = self.ranking_agent.rank_resumes(parsed_resumes)
-
-        # Step 5: Send results via email
-        self.email_agent.send_results(ranked_resumes)
